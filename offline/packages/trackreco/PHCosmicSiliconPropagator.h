@@ -42,7 +42,7 @@ class PHCosmicSiliconPropagator : public SubsysReco
   float _dca_z_cut = 5.;
   float _dca_xy_cut = 5.;
   bool m_zeroField = false;
-  std::string _track_map_name = "SvtxTrackSeedContainer";
+  std::string _track_map_name = "SiliconTrackSeedContainer";
 };
 
 #endif  // PHCOSMICSILICONPROPAGATOR_H

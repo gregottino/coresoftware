@@ -1162,8 +1162,7 @@ void TrkrNtuplizer::fillOutputNtuples(PHCompositeNode* topNode)
     {
       int trackID = 0;
       for (auto& iter : *_trackmap)
-      {
-	trackID++;
+      { trackID++;
         SvtxTrack* track = iter.second;
         TrackSeed* tpcseed = track->get_tpc_seed();
         TrackSeed* siseed = track->get_silicon_seed();
@@ -1366,6 +1365,86 @@ void TrkrNtuplizer::fillOutputNtuples(PHCompositeNode* topNode)
           _ntp_clus_trk->Fill(clus_trk_data);
         }
       }
+=======
+	cerr << PHWHERE << " ERROR: Can't find " << "TpcTrackSeedContainer" << endl;
+	return ;
+      }
+std::cout<<"_trackmap->size(): "<<_trackmap->size()<<std::endl;
+    if (_trackmap){
+      for (auto& iter : *_trackmap){
+	SvtxTrack* track = iter.second;
+	TrackSeed* tpcseed = track->get_tpc_seed();
+	TrackSeed* siseed = track->get_silicon_seed();
+	std::vector<Acts::Vector3> clusterPositions;
+	std::vector<TrkrDefs::cluskey> clusterKeys;
+	clusterKeys.insert(clusterKeys.end(), tpcseed->begin_cluster_keys(),
+			   tpcseed->end_cluster_keys());
+	/*if(siseed!=nullptr)
+	  clusterKeys.insert(clusterKeys.end(), siseed->begin_cluster_keys(),
+			   siseed->end_cluster_keys());
+	*/
+	TrackFitUtils::getTrackletClusters(_tgeometry, _cluster_map, 
+					   clusterPositions, clusterKeys);
+	std::vector<float> fitparams = TrackFitUtils::fitClusters(clusterPositions, clusterKeys);
+	if(fitparams.size()==0){
+	  cout << "fit failed bailing...." << endl;
+	  continue;
+	}
+       	float charge = NAN;
+	if(tpcseed->get_qOverR()>0)
+	  { charge = 1; }
+	else
+	  { charge = -1; }
+	
+	//	      "pt:eta:phi:X0:Y0:charge:nhits:"
+	float tpt = tpcseed->get_pt();
+	float teta = tpcseed->get_eta();
+	float tphi = tpcseed->get_phi(_cluster_map,_tgeometry);
+	float tX0 = tpcseed->get_X0();
+	float tY0 = tpcseed->get_Y0();
+	float tZ0 = tpcseed->get_Z0();
+	float nhits_local = clusterPositions.size();
+        if (Verbosity() > 1){
+	  cout << " tpc: " << tpcseed->size_cluster_keys() << endl;
+	  if(siseed)
+	    cout << " si " << siseed->size_cluster_keys() << endl;
+	  cout << "done seedsize" << endl;
+	}
+	//      nhits_local += tpcseed->size_cluster_keys();
+
+	for (unsigned int i = 0; i < clusterPositions.size(); i++){
+	  TrkrDefs::cluskey cluster_key = clusterKeys.at(i);
+	  Acts::Vector3 position = clusterPositions[i];
+	  Acts::Vector3 pca = TrackFitUtils::get_helix_pca(fitparams,position);
+	  float cluster_phi = atan2(position(1), position(0));
+	  float pca_phi = atan2(pca(1), pca(0));
+	  float dphi = cluster_phi - pca_phi;
+	  if (dphi > M_PI)
+	    {
+	      dphi = 2 * M_PI - dphi;
+	    }
+	  if (dphi < -M_PI)
+	    {
+	      dphi = 2 * M_PI + dphi;
+	    }
+	  float dz = position(2) - pca(2);
+	  float fx_res[n_residual::ressize] = {dphi,dz};
+	  float fx_seed[n_seed::seedsize] = {(float) track->get_id(),0,tpt,teta,tphi,tX0,tY0,tZ0,charge,nhits_local};
+	  float fx_cluster[n_cluster::clusize];
+	  //
+	  FillCluster(&fx_cluster[0], cluster_key);
+
+	  float *clus_trk_data = new float[n_info::infosize+n_cluster::clusize+n_residual::ressize+n_seed::seedsize+n_event::evsize];
+	  std::copy(fx_event,  fx_event  +n_event::evsize,    clus_trk_data);
+	  std::copy(fx_cluster,fx_cluster+n_cluster::clusize, clus_trk_data+n_event::evsize);
+	  std::copy(fx_res,    fx_res    +n_residual::ressize,clus_trk_data+n_event::evsize+n_cluster::clusize);
+	  std::copy(fx_seed,   fx_seed   +n_seed::seedsize,   clus_trk_data+n_event::evsize+n_cluster::clusize+n_residual::ressize);
+	  std::copy(fx_info,   fx_info   +n_info::infosize,   clus_trk_data+n_event::evsize+n_cluster::clusize+n_residual::ressize+n_seed::seedsize);
+	  _ntp_clus_trk->Fill(clus_trk_data);
+	   
+	}
+      }    
+>>>>>>> cbdd77384... test changes for mvtx half to half alignment
     }
   }
 

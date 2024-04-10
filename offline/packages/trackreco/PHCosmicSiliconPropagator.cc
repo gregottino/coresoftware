@@ -64,8 +64,12 @@ int PHCosmicSiliconPropagator::InitRun(PHCompositeNode* topNode)
   _tpc_seeds = findNode::getClass<TrackSeedContainer>(topNode, "TpcTrackSeedContainer");
   if (!_tpc_seeds)
   {
-    std::cout << "No TpcTrackSeedContainer, exiting." << std::endl;
-    return Fun4AllReturnCodes::ABORTEVENT;
+    std::cout << "No TpcTrackSeedContainer, creating..." << std::endl;
+    if (createSeedContainer(_tpc_seeds, "TpcTrackSeedContainer", topNode) != Fun4AllReturnCodes::EVENT_OK)
+    {
+      std::cout << "Cannot create, exiting." << std::endl;
+      return Fun4AllReturnCodes::ABORTEVENT;
+    }
   }
   _si_seeds = findNode::getClass<TrackSeedContainer>(topNode, "SiliconTrackSeedContainer");
   if (!_si_seeds)
@@ -98,8 +102,8 @@ int PHCosmicSiliconPropagator::process_event(PHCompositeNode* /*unused*/)
   {
     _svtx_seeds->Reset();
   }
-
-  for (auto& tpcseed : *_tpc_seeds)
+  
+  for (auto& tpcseed : *_svtx_seeds)
   {
     if (!tpcseed)
     {
@@ -291,21 +295,21 @@ int PHCosmicSiliconPropagator::process_event(PHCompositeNode* /*unused*/)
     }
   }
 
-  if (Verbosity() > 2)
-  {
-    std::cout << "svtx seed map size is " << _svtx_seeds->size() << std::endl;
-    int i = 0;
-    for (auto& seed : *_svtx_seeds)
-    {
-      std::cout << "seed " << i << " is composed of " << std::endl;
-      _tpc_seeds->get(seed->get_tpc_seed_index())->identify();
-      if (_si_seeds->get(seed->get_silicon_seed_index()))
-      {
-        _si_seeds->get(seed->get_silicon_seed_index())->identify();
-      }
-      ++i;
-    }
-  }
+  //if (Verbosity() > 2)
+  //{
+  //  std::cout << "svtx seed map size is " << _svtx_seeds->size() << std::endl;
+  //  int i = 0;
+  //  for (auto& seed : *_svtx_seeds)
+  //  {
+  //    std::cout << "seed " << i << " is composed of " << std::endl;
+  //    _svtx_seeds->get(seed->get_silicon_seed_index())->identify();
+  //    if (_si_seeds->get(seed->get_silicon_seed_index()))
+  //    {
+  //      _si_seeds->get(seed->get_silicon_seed_index())->identify();
+  //    }
+  //    ++i;
+  //  }
+  //}
   return Fun4AllReturnCodes::EVENT_OK;
 }
 

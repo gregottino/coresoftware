@@ -354,12 +354,11 @@ int TrackSeedTrackMapConverter::process_event(PHCompositeNode* /*unused*/)
     if (Verbosity() > 0)
     {
       std::cout << "Inserting svtxtrack into map " << std::endl;
-      svtxtrack->identify();
+      //svtxtrack->identify();
     }
 
     m_trackMap->insert(svtxtrack.get());
   }
-
   return Fun4AllReturnCodes::EVENT_OK;
 }
 void TrackSeedTrackMapConverter::lineFit(SvtxTrack_v4* track, TrackSeed* seed)

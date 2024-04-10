@@ -55,7 +55,7 @@ class TrackSeedTrackMapConverter : public SubsysReco
   
   std::string m_fieldMap;
   std::string m_trackMapName{"SvtxTrackMap"};
-  std::string m_trackSeedName{"TpcTrackSeedContainer"};
+  std::string m_trackSeedName{"SiliconTrackSeedContainer"};
 };
 
 #endif  // TRACKSEEDTRACKMAPCONVERTER_H

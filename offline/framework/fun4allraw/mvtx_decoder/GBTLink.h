@@ -564,7 +564,7 @@ inline int GBTLink::decode_lane( const uint8_t chipId, PayLoadCont& buffer)
         {
           if (! chip_trailer_found)
           {
-            log_error << "New chip header found before a previous chip trailer" << std::endl;
+          //  log_error << "New chip header found before a previous chip trailer" << std::endl;
           }
           chip_header_found = true;
           chip_trailer_found = false;

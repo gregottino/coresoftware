@@ -594,6 +594,7 @@ void MvtxClusterizer::ClusterMvtx(PHCompositeNode *topNode)
              << " zbins " << zbins.size() << " length " << length << " zsize "
              << zsize << " local x " << locclusx << " local y " << locclusz
              << endl;
+        cout<<"XYZ Test layer: "<<layer<<" phi tilt: "<<layergeom->get_stave_phi_tilt()<<" and phi0: "<<layergeom->get_stave_phi_0()<<endl;
       }
 
       auto clus = std::make_unique<TrkrClusterv5>();

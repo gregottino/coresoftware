@@ -862,3 +862,21 @@ float TrackFitUtils::get_helix_surface_pathlength(const Surface& surf, std::vect
   Acts::Vector3 intersection = get_helix_surface_intersection(surf,fitpars,surface_center,tGeometry);
   return get_helix_pathlength(fitpars,start_point,intersection);
 }
+bool TrackFitUtils::isTrackCrossMvtxHalf(std::vector<TrkrDefs::cluskey> cluskey_vec)
+{
+  bool isWest = false;
+  bool isEast = false;
+  for (unsigned int ivec = 0; ivec < cluskey_vec.size(); ++ivec)
+  {
+    uint32_t hitsetkey = TrkrDefs::getHitSetKeyFromClusKey(cluskey_vec[ivec]);
+    unsigned int layer =TrkrDefs::getLayer(hitsetkey);
+    unsigned int stave = MvtxDefs::getStaveId(hitsetkey);
+    if(stave > (2+layer) && stave < (9+layer*3))
+      isEast = true;
+    else
+      isWest = true;
+  }
+  if (isEast&&isWest)
+    return true;
+  return false;
+}

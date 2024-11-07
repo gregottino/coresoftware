@@ -3,6 +3,7 @@
 
 #include "ActsSurfaceMaps.h"
 #include "TrkrDefs.h"
+#include "MvtxDefs.h"
 
 #include <Acts/Definitions/Algebra.hpp>
 
@@ -122,6 +123,7 @@ namespace TrackFitUtils
 
   float get_helix_pathlength(std::vector<float>& fitpars, const Acts::Vector3& start_point, const Acts::Vector3& end_point);
   float get_helix_surface_pathlength(const Surface& surf, std::vector<float>& fitpars, const Acts::Vector3& start_point, ActsGeometry* tGeometry);
+  bool isTrackCrossMvtxHalf(std::vector<TrkrDefs::cluskey> cluskey_vec);
 };
 
 #endif

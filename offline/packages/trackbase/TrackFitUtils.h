@@ -132,7 +132,7 @@ namespace TrackFitUtils
 
   Acts::Vector2 get_line_point_pca(double slope, double intercept, Acts::Vector3 global);
   std::vector<float> fitClustersZeroField(std::vector<Acts::Vector3>& global_vec,
-						       std::vector<TrkrDefs::cluskey> cluskey_vec, bool use_intt);
+						       std::vector<TrkrDefs::cluskey> cluskey_vec, bool use_intt, bool mvtx_east = false, bool mvtx_west=false);
 
   float get_helix_pathlength(std::vector<float>& fitpars, const Acts::Vector3& start_point, const Acts::Vector3& end_point);
   float get_helix_surface_pathlength(const Surface& surf, std::vector<float>& fitpars, const Acts::Vector3& start_point, ActsGeometry* tGeometry);
@@ -149,6 +149,7 @@ namespace TrackFitUtils
    double z_fit_to_pca(const double slope, const double intercept, 
     const std::vector<Acts::Vector3>& glob_pts);
   bool isTrackCrossMvtxHalf(std::vector<TrkrDefs::cluskey> cluskey_vec);
+  bool includeMvtxHit(TrkrDefs::cluskey clus_key, bool mvtx_east, bool mvtx_west);
 };
 
 #endif

@@ -5,6 +5,9 @@
  */
 
 #include "MvtxCombinedRawDataDecoder.h"
+#include "MvtxPixelMask.h"
+#include "MvtxPixelMaskv1.h"
+
 
 #include <fun4allraw/MvtxRawDefs.h>
 #include <trackbase/MvtxDefs.h>
@@ -116,11 +119,7 @@ int MvtxCombinedRawDataDecoder::InitRun(PHCompositeNode *topNode)
   }
   recoConsts *rc = recoConsts::instance();
   int runNumber = rc->get_IntFlag("RUNNUMBER");
-
-  if (m_readStrWidthFromDB)
-  {
-    m_strobeWidth = MvtxRawDefs::getStrobeLength(runNumber);
-  }
+  m_strobeWidth = MvtxRawDefs::getStrobeLength(runNumber);
   if(std::isnan(m_strobeWidth))
   {
     std::cout << "MvtxCombinedRawDataDecoder::InitRun - strobe width is undefined for this run, defaulting to 89 mus" << std::endl;
@@ -130,12 +129,7 @@ int MvtxCombinedRawDataDecoder::InitRun(PHCompositeNode *topNode)
   {
     runMvtxTriggered(true);
   }
-  // Load the hot pixel map from the CDB
-  if(m_doOfflineMasking)
-  {
-    m_hot_pixel_mask = new MvtxPixelMask();
-    m_hot_pixel_mask->load_from_CDB();
-  }
+  
 
   return Fun4AllReturnCodes::EVENT_OK;
 }
@@ -163,6 +157,18 @@ int MvtxCombinedRawDataDecoder::process_event(PHCompositeNode *topNode)
     std::cout << "Have you built this yet?" << std::endl;
     exit(1);
   }
+
+  if(m_doOfflineMasking)
+  {
+    m_hot_pixel_mask = findNode::getClass<MvtxPixelMaskv1>(topNode, "MvtxHotPixelMask");
+    if (!m_hot_pixel_mask)
+    {
+      std::cout << PHWHERE << "::" << __func__ << ": Could not get \"MvtxHotPixelMask\" from Node Tree" << std::endl;
+      exit(1);
+    }
+    if (Verbosity() > 2) { m_hot_pixel_mask->identify(); }
+  }
+
   // Could we just get the first strobe BCO instead of setting this to 0?
   // Possible problem, what if the first BCO isn't the mean, then we'll shift tracker hit sets? Probably not a bad thing but depends on hit stripping
   //  uint64_t gl1rawhitbco = gl1 ? gl1->get_bco() : 0;
@@ -216,6 +222,10 @@ int MvtxCombinedRawDataDecoder::process_event(PHCompositeNode *topNode)
         findNode::getClass<MvtxEventInfo>(topNode, "MVTXEVENTHEADER");
     assert(mvtx_event_header);
   }
+  
+  // Load the hot pixel map from the CDB
+
+  
 
   for (unsigned int i = 0; i < mvtx_hit_container->get_nhits(); i++)
   {

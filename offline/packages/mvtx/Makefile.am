@@ -25,25 +25,31 @@ pkginclude_HEADERS = \
   MvtxCombinedRawDataDecoder.h \
   CylinderGeom_Mvtx.h \
   SegmentationAlpide.h \
-  MvtxPixelDefs.h \
-  MvtxPixelMask.h
+  MvtxPixelMask.h \
+  MvtxPixelMaskv1.h \
+  MvtxRawPixelDefs.h \
+  MvtxRawPixelMasker.h 
 
 ROOTDICTS = \
   CylinderGeom_Mvtx_Dict.cc \
-  MvtxNoiseMap_Dict.cc
+  MvtxNoiseMap_Dict.cc \
+  MvtxPixelMask_Dict.cc \
+  MvtxPixelMaskv1_Dict.cc
 
 pcmdir = $(libdir)
 nobase_dist_pcm_DATA = \
   CylinderGeom_Mvtx_Dict_rdict.pcm \
-	MvtxNoiseMap_Dict_rdict.pcm
+	MvtxNoiseMap_Dict_rdict.pcm \
+  MvtxPixelMask_Dict_rdict.pcm \
+  MvtxPixelMaskv1_Dict_rdict.pcm
+
 
 # sources for mvtx library
 libmvtx_la_SOURCES = \
   MvtxClusterizer.cc \
   MvtxHitPruner.cc \
   MvtxCombinedRawDataDecoder.cc \
-  MvtxPixelDefs.cc \
-  MvtxPixelMask.cc
+  MvtxRawPixelMasker.cc
 
 libmvtx_la_LIBADD = \
   libmvtx_io.la \
@@ -64,11 +70,22 @@ libmvtx_io_la_SOURCES = \
   $(ROOTDICTS) \
   CylinderGeom_Mvtx.cc \
   MvtxNoiseMap.cc \
-  SegmentationAlpide.cc
+  SegmentationAlpide.cc \
+  MvtxPixelMaskv1.cc \
+  MvtxRawPixelDefs.cc 
 
 libmvtx_io_la_LIBADD = \
   -lActsCore \
   -lphool \
+  -lfun4all \
+  -lffamodules \
+  -lffarawobjects \
+  -lcdbobjects \
+  -lCLHEP \
+  -lfun4allraw \
+  -lphg4hit \
+  -ltrack_io \
+  -lmvtx_decoder \
   -lg4detectors_io
 
 # Rule for generating table CINT dictionaries.

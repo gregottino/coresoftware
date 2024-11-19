@@ -31,7 +31,9 @@ pkginclude_HEADERS = \
 
 ROOTDICTS = \
   CylinderGeom_Mvtx_Dict.cc \
-  MvtxNoiseMap_Dict.cc
+  MvtxNoiseMap_Dict.cc \
+  MvtxPixelMask_Dict.cc \
+  MvtxPixelMaskv1_Dict.cc
 
 pcmdir = $(libdir)
 nobase_dist_pcm_DATA = \
@@ -67,7 +69,9 @@ libmvtx_io_la_SOURCES = \
   $(ROOTDICTS) \
   CylinderGeom_Mvtx.cc \
   MvtxNoiseMap.cc \
-  SegmentationAlpide.cc
+  SegmentationAlpide.cc \
+  MvtxPixelMaskv1.cc \
+  MvtxRawPixelDefs.cc 
 
 libmvtx_io_la_LIBADD = \
   -lg4detectors_io \

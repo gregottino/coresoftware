@@ -67,6 +67,8 @@ class HelicalFitter : public SubsysReco, public PHParameterInterface
   void set_mms_grouping(int group) { mms_grp = (AlignmentDefs::mmsGrp) group; }
   void set_test_output(bool test) { test_output = test; }
   void set_intt_layer_fixed(unsigned int layer);
+  void set_intt_ladder_fixed(unsigned int layer, uint8_t ladder);
+  void set_intt_sensor_fixed(unsigned int layer, uint8_t ladder, uint8_t sensor);
   void set_mvtx_layer_fixed(unsigned int layer, unsigned int clamshell);
   void set_tpc_sector_fixed(unsigned int region, unsigned int sector, unsigned int side);
   void set_layer_param_fixed(unsigned int layer, unsigned int param);
@@ -131,7 +133,11 @@ class HelicalFitter : public SubsysReco, public PHParameterInterface
 
   bool is_tpc_sector_fixed(unsigned int layer, unsigned int sector, unsigned int side);
   bool is_mvtx_layer_fixed(unsigned int layer, unsigned int stave);
+
   bool is_intt_layer_fixed(unsigned int layer);
+  bool is_intt_ladder_fixed(unsigned int layer, uint8_t ladder);
+  bool is_intt_sensor_fixed(unsigned int layer, uint8_t ladder, uint8_t sensor);
+
   bool is_layer_param_fixed(unsigned int layer, unsigned int param);
   bool is_vertex_param_fixed(unsigned int param);
 
@@ -173,6 +179,8 @@ class HelicalFitter : public SubsysReco, public PHParameterInterface
 
   std::set<std::pair<unsigned int, unsigned int>> fixed_mvtx_layers;
   std::set<unsigned int> fixed_intt_layers;
+  std::set<std::tuple<unsigned int, uint8_t>> fixed_intt_ladders;
+  std::set<std::tuple<unsigned int, uint8_t, uint8_t>> fixed_intt_sensors;
   std::set<unsigned int> fixed_sectors;
   std::set<std::pair<unsigned int, unsigned int>> fixed_layer_params;
   std::set<unsigned int> fixed_vertex_params;

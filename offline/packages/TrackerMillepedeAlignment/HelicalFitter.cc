@@ -514,6 +514,8 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
       }
 
       unsigned int trkrid = TrkrDefs::getTrkrId(cluskey);
+	  uint8_t phi_element = TrkrDefs::getPhiElement(cluskey);
+	  uint8_t z_element = TrkrDefs::getZElement(cluskey);
 
       // What we need now is to find the point on the surface at which the helix would intersect
       // If we have that point, we can transform the fit back to local coords
@@ -682,8 +684,12 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
 
         if (trkrid == TrkrDefs::inttId)
         {
-          if (is_layer_param_fixed(layer, i) || is_intt_layer_fixed(layer))
-          {
+          if (
+            is_layer_param_fixed(layer, i) ||
+			is_intt_layer_fixed(layer) ||
+			is_intt_ladder_fixed(layer, phi_element) ||
+			is_intt_sensor_fixed(layer, phi_element, z_element)
+          ) {
             glbl_derivativeX[i] = 0;
             glbl_derivativeY[i] = 0;
           }
@@ -1396,11 +1402,10 @@ void HelicalFitter::getTrackletClusterList(TrackSeed* tracklet, std::vector<Trkr
     }
 
     // drop INTT clusters for now  -- TEMPORARY!
-    if (layer > 2 && layer < 7)
-    {
-      continue;
-    }
-
+    // if (layer > 2 && layer < 7)
+    // {
+    //   continue;
+    // }
 
     cluskey_vec.push_back(key);
 
@@ -1913,16 +1918,20 @@ bool HelicalFitter::is_vertex_param_fixed(unsigned int param)
   }
   return ret;
 }
+
 bool HelicalFitter::is_intt_layer_fixed(unsigned int layer)
 {
-  bool ret = false;
-  auto it = fixed_intt_layers.find(layer);
-  if (it != fixed_intt_layers.end())
-  {
-    ret = true;
-  }
+  return fixed_intt_layers.find(layer) != fixed_intt_layers.end();
+}
 
-  return ret;
+bool HelicalFitter::is_intt_ladder_fixed(unsigned int layer, uint8_t ladder)
+{
+  return fixed_intt_ladders.find({layer, ladder}) != fixed_intt_ladders.end();
+}
+
+bool HelicalFitter::is_intt_sensor_fixed(unsigned int layer, uint8_t ladder, uint8_t sensor)
+{
+  return fixed_intt_sensors.find({layer, ladder, sensor}) != fixed_intt_sensors.end();
 }
 
 bool HelicalFitter::is_mvtx_layer_fixed(unsigned int layer, unsigned int clamshell)
@@ -1942,6 +1951,16 @@ bool HelicalFitter::is_mvtx_layer_fixed(unsigned int layer, unsigned int clamshe
 void HelicalFitter::set_intt_layer_fixed(unsigned int layer)
 {
   fixed_intt_layers.insert(layer);
+}
+
+void HelicalFitter::set_intt_ladder_fixed(unsigned int layer, uint8_t ladder)
+{
+  fixed_intt_ladders.insert({layer, ladder});
+}
+
+void HelicalFitter::set_intt_sensor_fixed(unsigned int layer, uint8_t ladder, uint8_t sensor)
+{
+  fixed_intt_sensors.insert({layer, ladder, sensor});
 }
 
 void HelicalFitter::set_mvtx_layer_fixed(unsigned int layer, unsigned int clamshell)

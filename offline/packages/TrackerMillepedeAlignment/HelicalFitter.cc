@@ -446,7 +446,7 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
 	newTrack.set_py(someseed.get_py());
 	newTrack.set_pz(someseed.get_pz());
 	newTrack.set_charge(tracklet->get_charge());
-      }	
+      }
 	    
     nclus = ntpc + nsilicon;
 
@@ -514,8 +514,8 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
       }
 
       unsigned int trkrid = TrkrDefs::getTrkrId(cluskey);
-	  uint8_t phi_element = TrkrDefs::getPhiElement(cluskey);
-	  uint8_t z_element = TrkrDefs::getZElement(cluskey);
+      uint8_t phi_element = TrkrDefs::getPhiElement(cluskey);
+      uint8_t z_element = TrkrDefs::getZElement(cluskey);
 
       // What we need now is to find the point on the surface at which the helix would intersect
       // If we have that point, we can transform the fit back to local coords
@@ -686,9 +686,9 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
         {
           if (
             is_layer_param_fixed(layer, i) ||
-			is_intt_layer_fixed(layer) ||
-			is_intt_ladder_fixed(layer, phi_element) ||
-			is_intt_sensor_fixed(layer, phi_element, z_element)
+            is_intt_layer_fixed(layer) ||
+            is_intt_ladder_fixed(layer, phi_element) ||
+            is_intt_sensor_fixed(layer, phi_element, z_element)
           ) {
             glbl_derivativeX[i] = 0;
             glbl_derivativeY[i] = 0;
@@ -827,7 +827,7 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
 	  {
 	    SvtxTrack *vtxtrack = m_trackmap->get(*trackiter);
 	    if (vtxtrack)
-	      {	    
+	      {
 		unsigned int vtxtrackid = vtxtrack->get_id();
 		if(trackid == vtxtrackid)
 		  {

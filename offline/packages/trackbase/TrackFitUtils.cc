@@ -664,7 +664,7 @@ std::vector<float> TrackFitUtils::fitClustersZeroField(std::vector<Acts::Vector3
     }
   if (global_vec_noINTT.size() < 3)
     {
-       std::cout << " TrackFitUtils::fitClustersZeroField failed for <3 non-INTT cluskeys " << ((int)global_vec_noINTT.size()) << std::endl;
+       //std::cout << " TrackFitUtils::fitClustersZeroField failed for <3 non-INTT cluskeys " << ((int)global_vec_noINTT.size()) << std::endl;
       return fitpars;
     }
   std::tuple<double, double> xz_fit_pars = TrackFitUtils::line_fit_xz(global_vec_noINTT);

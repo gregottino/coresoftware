@@ -519,7 +519,7 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
       }
       continue;
     }
-    if (fabs(newTrack.get_eta()) > m_eta_cut)
+    if(fabs(newTrack.get_eta()) > m_eta_cut || newTrack.get_pt() < m_pt_min)
     {
       continue;
     }
@@ -921,8 +921,9 @@ int HelicalFitter::process_event(PHCompositeNode* /*unused*/)
             event_vtx(2) = vertex->get_z();
             if (Verbosity() > 0)
             {
-              std::cout << "     setting event_vertex for trackid " << trackid << " to vtxid " << vtxkey
-                        << " vtx " << event_vtx(0) << "  " << event_vtx(1) << "  " << event_vtx(2) << std::endl;
+              std::cout << "     setting event_vertex for trackid " << trackid << " to vtxid " << vtxkey<< std::endl;
+              std::cout  << " vtx " << event_vtx(0) << "  " << event_vtx(1) << "  " << event_vtx(2) << std::endl;
+              std::cout<< "avg vtx "<< averageVertex(0) << "  " << averageVertex(1)<< "  " << averageVertex(2)<< std::endl;
             }
           }
         }

@@ -1566,7 +1566,7 @@ int KFParticle_Tools::getNchargedSiSeedMultiplicity(PHCompositeNode *topNode, co
   TrackSeed *_tracklet_si;
   int ncharged_multiplicity = 0;
   const int nMapsCut = 1;  
-  const int nInttCut = 1;  
+  const int nInttCut = 1;    
   for (unsigned int phtrk_iter_si = 0;
          phtrk_iter_si < m_siliconSeeds->size();
          ++phtrk_iter_si)

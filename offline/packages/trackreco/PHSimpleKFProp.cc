@@ -1363,7 +1363,7 @@ void PHSimpleKFProp::rejectAndPublishSeeds(std::vector<TrackSeed_v2>& seeds, con
 
       auto& seed = seeds[itrack];
       /// The ALICEKF gives a better charge determination at high pT
-      const int q = seed.get_charge();
+      //const int q = seed.get_charge();
 
       PositionMap local;
       std::transform(seed.begin_cluster_keys(), seed.end_cluster_keys(), std::inserter(local, local.end()),
@@ -1372,7 +1372,8 @@ void PHSimpleKFProp::rejectAndPublishSeeds(std::vector<TrackSeed_v2>& seeds, con
       TrackSeedHelper::circleFitByTaubin(&seed,local, 7, 55);
       TrackSeedHelper::lineFit(&seed,local, 7, 55);
       seed.set_phi(TrackSeedHelper::get_phi(&seed,local));
-      seed.set_qOverR(std::abs(seed.get_qOverR()) * q);
+      //seed.set_qOverR(std::abs(seed.get_qOverR()) * q);
+      seed.set_qOverR(seed.get_qOverR());
     }
 
   }

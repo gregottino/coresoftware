@@ -46,7 +46,7 @@ void ActsAlignmentStates::loadNodes( PHCompositeNode* topNode )
   m_tGeometry = findNode::getClass<ActsGeometry>(topNode, "ActsGeometry");
 
   // cluster container
-  m_clusterMap = findNode::getClass<TrkrClusterContainer>(topNode, "TRKR_CLUSTER");
+  m_clusterMap = findNode::getClass<TrkrClusterContainer>(topNode, "TRKR_CLUSTER_SEED");
 
   // state map
   m_alignmentStateMap = findNode::getClass<SvtxAlignmentStateMap>(topNode, m_alignmentStateMapName);
@@ -101,10 +101,10 @@ void ActsAlignmentStates::fillAlignmentStateMap(
     }
   }
 
-  if (nmaps < 2 || nintt < 2)
-  {
-    return;
-  }
+  //if (nmaps < 2 || nintt < 2)
+  //{
+  //  return;
+  //}
 
   //! make sure the track was fully fit through the mvtx
   SvtxTrackState* firststate = (*std::next(track->begin_states(), 1)).second;

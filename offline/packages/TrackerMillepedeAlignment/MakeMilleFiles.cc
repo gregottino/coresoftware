@@ -1118,7 +1118,7 @@ int MakeMilleFiles::End(PHCompositeNode* /*unused*/)
 
 int MakeMilleFiles::GetNodes(PHCompositeNode* topNode)
 {
-  _cluster_map = findNode::getClass<TrkrClusterContainer>(topNode, "TRKR_CLUSTER");
+  _cluster_map = findNode::getClass<TrkrClusterContainer>(topNode, "TRKR_CLUSTER_SEED");
   if (!_cluster_map)
   {
     std::cout << PHWHERE << " ERROR: Can't find node TRKR_CLUSTER" << std::endl;
